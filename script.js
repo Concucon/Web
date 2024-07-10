@@ -1,71 +1,68 @@
-// Wait for the DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function() {
-    // Check if user is logged in (checking cookie)
-    let currentUser = getCookies().currentUser;
-    if (currentUser) {
-        // Redirect to web1s.com if user is logged in
-        redirectToWeb1S();
+    // Switch to register form
+    let switchToRegister = document.querySelector("#switchToRegister");
+    if (switchToRegister) {
+        switchToRegister.addEventListener("click", function(event) {
+            event.preventDefault();
+            switchForms();
+        });
+    } else {
+        console.error("Không tìm thấy phần tử #switchToRegister trong DOM.");
     }
 
-    // Switch to register form
-    document.querySelector("#switchToRegister").addEventListener("click", function(event) {
-        event.preventDefault();
-        switchForms();
-    });
-
     // Switch to login form
-    document.querySelector("#switchToLogin").addEventListener("click", function(event) {
-        event.preventDefault();
-        switchForms();
-    });
+    let switchToLogin = document.querySelector("#switchToLogin");
+    if (switchToLogin) {
+        switchToLogin.addEventListener("click", function(event) {
+            event.preventDefault();
+            switchForms();
+        });
+    } else {
+        console.error("Không tìm thấy phần tử #switchToLogin trong DOM.");
+    }
 
     // Handle login form submission
-    document.querySelector("#loginForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let username = document.querySelector("#loginUsername").value;
-        let password = document.querySelector("#loginPassword").value;
-
-        // Simulate server-side validation
-        let user = { username: username, password: password };
-        if (validateUser(user)) {
-            saveUserCookie(user); // Save user info to cookie
-            redirectToWeb1S(); // Redirect to web1s.com after successful login
-        } else {
-            alert("Invalid username or password.");
-        }
-    });
+    let loginForm = document.querySelector("#loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let username = document.querySelector("#loginUsername").value;
+            let password = document.querySelector("#loginPassword").value;
+            let user = { username: username, password: password };
+            if (validateUser(user)) {
+                saveUserCookie(user);
+                redirectToWeb1S();
+            } else {
+                alert("Invalid username or password.");
+            }
+        });
+    } else {
+        console.error("Không tìm thấy phần tử #loginForm trong DOM.");
+    }
 
     // Handle register form submission
-    document.querySelector("#registerForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let username = document.querySelector("#registerUsername").value;
-        let password = document.querySelector("#registerPassword").value;
-
-        // Simulate server-side registration
-        let newUser = { username: username, password: password };
-        saveUserCookie(newUser); // Save new user info to cookie
-        redirectToWeb1S(); // Redirect to web1s.com after successful registration
-    });
+    let registerForm = document.querySelector("#registerForm");
+    if (registerForm) {
+        registerForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let username = document.querySelector("#registerUsername").value;
+            let password = document.querySelector("#registerPassword").value;
+            let newUser = { username: username, password: password };
+            saveUserCookie(newUser);
+            redirectToWeb1S();
+        });
+    } else {
+        console.error("Không tìm thấy phần tử #registerForm trong DOM.");
+    }
 
     // Function to validate user (simulated server-side validation)
     function validateUser(user) {
-        // In a real scenario, you would check against a database or server
         return user.username === "user" && user.password === "password";
     }
 
     // Function to save user info to cookie
     function saveUserCookie(user) {
         document.cookie = `currentUser=${JSON.stringify(user)}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-    }
-
-    // Function to get cookies
-    function getCookies() {
-        let cookies = {};
-        document.cookie.split(";").forEach(function(cookie) {
-            let parts = cookie.split("=");
-            cookies[parts[0].trim()] = decodeURIComponent(parts[1]);
-        });
-        return cookies;
     }
 
     // Function to redirect to web1s.com
@@ -79,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let registerForm = document.querySelector("#registerForm");
         let switchMessage = document.querySelector("#switchMessage");
 
-        if (loginForm.style.display === "none") {
+        let loginFormDisplay = getComputedStyle(loginForm).display;
+
+        if (loginFormDisplay === "none") {
             loginForm.style.display = "block";
             registerForm.style.display = "none";
             switchMessage.innerHTML = "Don't have an account? <a href=\"#\" id=\"switchToRegister\">Switch to Register</a>";
@@ -90,4 +89,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
-
